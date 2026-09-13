@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "create-comps": "tsx ./src/create_comps/create_comps.ts"
+    "create-comps": "tsx ./src/create_comps/create_comps.ts",
+    "predict-comps": "tsx ./src/create_comps/predict_comps.ts"
   },
   "keywords": [],
   "author": "",

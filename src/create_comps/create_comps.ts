@@ -23,7 +23,7 @@ async function main() {
     );
 
     debugLog("Start:", formatISO(startsAt));
-    debugLog("End:", formatISO(startsAt));
+    debugLog("End:", formatISO(endsAt));
 
     for (const compConfig of COMP_CONFIGS) {
       const metric = pickNthMetric(

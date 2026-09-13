@@ -10,6 +10,8 @@ import { debugLog } from "../utils/debug_log";
 
 async function main() {
 	debugLog("Duration:", env.COMP_DURATION);
+	debugLog("Seed:", JSON.stringify(env.WOM_GROUP_ID.toString()));
+	debugLog("---");
 
 	for (var i = -2; i <= 2; i++) {
 		const { startsAt, endsAt, compIndex } = getDurationInfo(

@@ -14,3 +14,4 @@ COPY . .
 # RUN chmod 0644 /etc/cron.d/create-comps-cron
 
 # CMD ["cron", "-f"]
+CMD ["sleep", "infinity"]

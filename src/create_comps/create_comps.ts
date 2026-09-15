@@ -23,7 +23,7 @@ async function main() {
     );
 
     debugLog("Start:", formatISO(startsAt));
-    debugLog("End:", formatISO(startsAt));
+    debugLog("End:", formatISO(endsAt));
 
     for (const compConfig of COMP_CONFIGS) {
       const metric = pickNthMetric(
@@ -39,8 +39,8 @@ async function main() {
 
       const {
         competition: { id: competitionId, participations },
-      } = await retryAsync(() =>
-        womClient.competitions.createCompetition({
+      } = await retryAsync(async () => {
+        const ret = await womClient.competitions.createCompetition({
           title,
           metric,
           startsAt,
@@ -48,8 +48,12 @@ async function main() {
           groupId: env.WOM_GROUP_ID,
           groupVerificationCode: env.WOM_GROUP_KEY,
           teams: [],
-        }),
-      );
+        });
+        if (ret == null) {
+          throw new Error("WOM returned " + JSON.stringify(ret))
+        }
+        return ret;
+      });
 
       debugLog(`Done! Competition ID: ${competitionId}`);
 
@@ -59,13 +63,17 @@ async function main() {
           .filter(({ player }) => player.type !== "regular")
           .map(({ player }) => player.username);
 
-        await retryAsync(() =>
-          womClient.competitions.editCompetition(
+        await retryAsync(async () => {
+          const ret = await womClient.competitions.editCompetition(
             competitionId,
             { participants: irons },
             env.WOM_GROUP_KEY,
-          ),
-        );
+          )
+          if (ret == null) {
+            throw new Error("Wom returned " + JSON.stringify(ret))
+          }
+          return ret;
+        });
 
         debugLog(
           `Done! Old count: ${participations.length}, new count: ${irons.length}`,

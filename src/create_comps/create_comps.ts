@@ -39,7 +39,7 @@ async function main() {
 
       const {
         competition: { id: competitionId, participations },
-      } = await retryAsync(async () => {
+      } = await retryAsync("Create Competition", async () => {
         const ret = await womClient.competitions.createCompetition({
           title,
           metric,
@@ -63,7 +63,7 @@ async function main() {
           .filter(({ player }) => player.type !== "regular")
           .map(({ player }) => player.username);
 
-        await retryAsync(async () => {
+        await retryAsync("Exclude Regs", async () => {
           const ret = await womClient.competitions.editCompetition(
             competitionId,
             { participants: irons },
@@ -82,6 +82,7 @@ async function main() {
     }
   } catch (error) {
     await retryAsync(
+      "Report Error",
       async () => {
         const response = await fetch(
           env.ERROR_WEBHOOK,

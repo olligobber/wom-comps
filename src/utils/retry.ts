@@ -1,10 +1,20 @@
-export async function retryAsync<T>(fn: () => Promise<T>, maxAttempts : number = 5): Promise<T> {
+import { debugLog } from "../utils/debug_log";
+
+export async function retryAsync<T>(name: string, fn: () => Promise<T>, maxAttempts : number = 5): Promise<T> {
   const baseDelayMs = 100;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
     try {
       return await fn();
     } catch (error) {
+      debugLog(
+        "Attempt",
+        attempt,
+        "of",
+        maxAttempts,
+        "while running \"" + name + "\" produced error:",
+        JSON.stringify(error, Object.getOwnPropertyNames(error)),
+      )
       if (attempt === maxAttempts) {
         throw error;
       }

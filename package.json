@@ -1,27 +1,27 @@
 {
-  "name": "wom-comps",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "create-comps": "tsx ./src/create_comps/create_comps.ts"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.33.0",
-  "dependencies": {
-    "@date-fns/utc": "^2.1.1",
-    "@wise-old-man/utils": "^4.0.14",
-    "date-fns": "^4.1.0",
-    "dotenv": "^17.4.2",
-    "seedrandom": "^3.0.5",
-    "tsx": "^4.21.0",
-    "typescript": "^6.0.3",
-    "zod": "^4.4.3"
-  },
-  "devDependencies": {
-    "@types/node": "^25.6.0",
-    "@types/seedrandom": "^3.0.8"
-  }
+	"name": "wom-comps",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"create-comps": "tsx ./src/create_comps/create_comps.ts"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"packageManager": "pnpm@10.33.0",
+	"dependencies": {
+		"@date-fns/utc": "^2.1.1",
+		"@wise-old-man/utils": "^4.0.14",
+		"date-fns": "^4.1.0",
+		"dotenv": "^17.4.2",
+		"seedrandom": "^3.0.5",
+		"tsx": "^4.21.0",
+		"typescript": "^6.0.3",
+		"zod": "^4.4.3"
+	},
+	"devDependencies": {
+		"@types/node": "^25.6.0",
+		"@types/seedrandom": "^3.0.8"
+	}
 }

@@ -1,6 +1,10 @@
 import { debugLog } from "../utils/debug_log";
 
-export async function retryAsync<T>(name: string, fn: () => Promise<T>, maxAttempts : number = 5): Promise<T> {
+export async function retryAsync<T>(
+	name: string,
+	fn: () => Promise<T>,
+	maxAttempts : number = 5,
+): Promise<T> {
 	const baseDelayMs = 100;
 
 	for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {

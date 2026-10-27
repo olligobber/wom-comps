@@ -1,9 +1,7 @@
 import { WOMClient } from "@wise-old-man/utils";
-import seedrandom from "seedrandom";
 import { env } from "../env";
 import { UTCDate } from "@date-fns/utc";
-import { pickNthMetric } from "./pick_nth_metric";
-import { COMP_CONFIGS } from "./comps_config";
+import { competitions } from "./comps_config";
 import { getDurationInfo } from "./get_duration_info";
 import { formatISO } from "date-fns";
 import { debugLog } from "../utils/debug_log";
@@ -26,55 +24,32 @@ async function main() {
 		debugLog("Start:", formatISO(startsAt));
 		debugLog("End:", formatISO(endsAt));
 
-		for (const compConfig of COMP_CONFIGS) {
-			const metric = pickNthMetric(
+		for (const competition of competitions) {
+			competition.create({
 				compIndex,
-				compConfig.metrics,
-				seedrandom(env.WOM_GROUP_ID.toString()),
-			);
-
-			const title = compConfig.getName({ metric });
-
-			debugLog("");
-			debugLog(`Creating comp for '${title}'...`);
-
-			const {
-				competition: { id: competitionId, participations },
-			} = await retryAsync("Create Competition", () =>
-				checkExists(womClient.competitions.createCompetition({
-					title,
-					metric,
-					startsAt,
-					endsAt,
-					groupId: env.WOM_GROUP_ID,
-					groupVerificationCode: env.WOM_GROUP_KEY,
-					teams: [],
-				}))
-			);
-
-			debugLog(`Done! Competition ID: ${competitionId}`);
-
-			if (compConfig.excludeRegs) {
-				debugLog("Excluding regs...");
-				const irons = participations
-					.filter(({ player }) => player.type !== "regular")
-					.map(({ player }) => player.username);
-
-				await retryAsync("Exclude Regs", () =>
+				seed: env.WOM_GROUP_ID.toString(),
+				logger: debugLog,
+				creator: async (title, metric) => {
+					let response = await
+						checkExists(womClient.competitions.createCompetition({
+							title,
+							metric,
+							startsAt,
+							endsAt,
+							groupId: env.WOM_GROUP_ID,
+							groupVerificationCode: env.WOM_GROUP_KEY,
+							teams: [],
+						}))
+					return response.competition
+				},
+				editor: async (competitionId, participants) => {
 					checkExists(womClient.competitions.editCompetition(
 						competitionId,
-						{ participants: irons },
+						{ participants },
 						env.WOM_GROUP_KEY,
 					))
-				);
-
-				debugLog(
-					'Done! Old count: ' +
-					participations.length +
-					', new count: ' +
-					irons.length
-				);
-			}
+				}
+			})
 		}
 	} catch (error) {
 		const body = [
